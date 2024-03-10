@@ -58,13 +58,15 @@ sys_sleep(void)
   int n;
   uint ticks0;
 
-  if(argint(0, &n) < 0)
+  if(argint(0, &n) < 0) //毫秒转换成纳秒，获得睡眠时间
     return -1;
-  acquire(&tickslock);
-  ticks0 = ticks;
-  while(ticks - ticks0 < n){
-    if(myproc()->killed){
-      release(&tickslock);
+  acquire(&tickslock); //获得互斥锁
+  //获取当前的ticks 
+  ticks0 = ticks; 
+  //ticks是当前时间，ticks一直在变，ticks0是初始时间
+  while(ticks - ticks0 < n){ //当sleep时间结束后，循环结束
+    if(myproc()->killed){ //查看当前线程是否变为终止态
+      release(&tickslock); //解锁
       return -1;
     }
     sleep(&ticks, &tickslock);
