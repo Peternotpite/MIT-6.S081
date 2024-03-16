@@ -47,7 +47,7 @@ void prime(int *p)
 
     }else{
         //child's father process
-        close(p_child[READEND]);
+        close(p_child[READEND]); //防止数据读到子管道里
         printf("prime %d\n",*buf);
         int prime = *buf;
 
@@ -58,7 +58,7 @@ void prime(int *p)
                 write(p_child[WRITEEND],buf,4);
             }
         }
-        close(p_child[WRITEEND]);
+        close(p_child[WRITEEND]); //父管道写完了，该子管道读了
         wait(0);
         exit(0);
     }
